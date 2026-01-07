@@ -6,8 +6,8 @@ import { encrypt, decrypt } from "@/utils/seededCipher";
 type Mode = "encrypt" | "decrypt";
 
 export default function CoddedPage() {
-  const [text, setText] = useState("Hello WORLD! 1234 @#$%");
-  const [seed, setSeed] = useState(1234);
+  const [text, setText] = useState("");
+  const [seed, setSeed] = useState(0);
   const [mode, setMode] = useState<Mode>("encrypt");
 
   const output =
