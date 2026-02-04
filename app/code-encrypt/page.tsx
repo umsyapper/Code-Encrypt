@@ -7,7 +7,7 @@ type Mode = "encrypt" | "decrypt";
 
 export default function CoddedPage() {
   const [mode, setMode] = useState<Mode>("encrypt");
-  const [seed, setSeed] = useState(0);
+  const [seed, setSeed] = useState<string>("");
 
   const [encryptText, setEncryptText] = useState("");
   const [decryptText, setDecryptText] = useState("");
@@ -25,14 +25,27 @@ export default function CoddedPage() {
     else setDecryptText(value);
   };
 
-  const run = () => {
-    setCopied(false);
+const run = () => {
+  setCopied(false);
+
+  if (seed === "") {
     if (mode === "encrypt") {
-      setEncryptOutput(encrypt(encryptText, seed));
+      setEncryptOutput(encryptText);
     } else {
-      setDecryptOutput(decrypt(decryptText, seed));
+      setDecryptOutput(decryptText);
     }
-  };
+    return;
+  }
+
+  const numericSeed = Number(seed);
+
+  if (mode === "encrypt") {
+    setEncryptOutput(encrypt(encryptText, numericSeed));
+  } else {
+    setDecryptOutput(decrypt(decryptText, numericSeed));
+  }
+};
+
 
   const copyOutput = async () => {
     if (!currentOutput) return;
@@ -94,7 +107,10 @@ export default function CoddedPage() {
           <input
             type="number"
             value={seed}
-            onChange={(e) => setSeed(Number(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = e.target.value.replace(/[^0-9]/g, "");
+              setSeed(value === "" ? "" : value);
+            }}
             className="w-full bg-black border border-white/30 rounded p-2
                        text-white text-sm focus:outline-none focus:border-white"
           />
